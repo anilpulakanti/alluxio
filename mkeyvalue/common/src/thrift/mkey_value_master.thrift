@@ -6,7 +6,7 @@ include "exception.thrift"
 /**
  * Information about a key-value partition.
  */
-struct PartitionInfo {
+struct MuPartitionInfo {
   1: string path
   2: i64 mergeOffset
   3: common.WorkerNetAddress address
@@ -26,7 +26,7 @@ service MuKeyValueMasterClientService extends common.AlluxioService {
   /**
    * Gets the partition information for the key-value store at the given filesystem path.
    */
-  list<PartitionInfo> getPartitionInfo( /** the path of the store */ 1: string path)
+  list<MuPartitionInfo> getPartitionInfo( /** the path of the store */ 1: string path)
     throws (1: exception.AlluxioTException e)
 
   /**

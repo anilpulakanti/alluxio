@@ -19,6 +19,7 @@ import alluxio.RpcUtils.RpcCallableThrowsIOException;
 import alluxio.exception.AlluxioException;
 import alluxio.thrift.AlluxioTException;
 import alluxio.thrift.MuKeyValueMasterClientService;
+import alluxio.thrift.MuPartitionInfo;
 import alluxio.thrift.PartitionInfo;
 import alluxio.thrift.ThriftIOException;
 
@@ -58,10 +59,11 @@ public class MuKeyValueMasterClientServiceHandler implements  MuKeyValueMasterCl
   }
 
   @Override
-  public List<PartitionInfo> getPartitionInfo(final String path) throws AlluxioTException, TException {
-    return RpcUtils.call(new RpcCallable<List<PartitionInfo>>() {
+  public List<MuPartitionInfo> getPartitionInfo(final String path)
+      throws AlluxioTException, TException {
+    return RpcUtils.call(new RpcCallable<List<MuPartitionInfo>>() {
       @Override
-      public List<PartitionInfo> call() throws AlluxioException {
+      public List<MuPartitionInfo> call() throws AlluxioException {
         return mKeyValueMaster.getPartitionInfo(new AlluxioURI(path));
       }
     });

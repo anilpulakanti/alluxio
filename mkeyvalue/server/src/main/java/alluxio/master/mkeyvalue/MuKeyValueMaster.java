@@ -29,7 +29,7 @@ import alluxio.master.journal.Journal;
 import alluxio.master.journal.JournalOutputStream;
 import alluxio.proto.journal.Journal.JournalEntry;
 import alluxio.thrift.MuKeyValueMasterClientService;
-import alluxio.thrift.PartitionInfo;
+import alluxio.thrift.MuPartitionInfo;
 import alluxio.thrift.WorkerNetAddress;
 import alluxio.util.IdUtils;
 import alluxio.util.executor.ExecutorServiceFactories;
@@ -62,7 +62,7 @@ public final class MuKeyValueMaster extends AbstractMaster {
   private final FileSystemMaster mFileSystemMaster;
 
   /** Map from file id of a mkey-value store to the list of partitions in this store. */
-  private final Map<Long, List<PartitionInfo>> mKVStoreToPartitions;
+  private final Map<Long, List<MuPartitionInfo>> mKVStoreToPartitions;
 
   /**
    * @param baseDirectory the base journal directory
@@ -149,8 +149,8 @@ public final class MuKeyValueMaster extends AbstractMaster {
     Preconditions.checkNotNull(workerInfoList);
     Preconditions.checkState(!workerInfoList.isEmpty(), "workerlist is empty");
 
-    ArrayList<PartitionInfo> partitionList = new ArrayList<>();
-    for(int i=0; i<workerInfoList.size(); i++){
+    ArrayList<MuPartitionInfo> partitionList = new ArrayList<>();
+    for (int i = 0; i < workerInfoList.size(); i++) {
       WorkerInfo workerInfo = workerInfoList.get(i);
       WorkerNetAddress workerNetAddress = ThriftUtils.toThrift(workerInfo.getAddress());
       AlluxioURI uri = getPartitionName(path.getPath(), i);
@@ -163,7 +163,8 @@ public final class MuKeyValueMaster extends AbstractMaster {
         throw new InvalidPathException(
             String.format("Failed to createStore: can not create path %s", path), e);
       }
-      PartitionInfo partitionInfo = new PartitionInfo(uri.getPath(), 0, workerNetAddress);
+      MuPartitionInfo partitionInfo =
+          new MuPartitionInfo(uri.getPath(), Long.valueOf(0), workerNetAddress);
       partitionList.add(partitionInfo);
     }
     mKVStoreToPartitions.put(fileId, partitionList);
@@ -244,10 +245,10 @@ public final class MuKeyValueMaster extends AbstractMaster {
    * @throws AccessControlException if permission checking fails
    * @throws InvalidPathException if the path is invalid
    */
-  public synchronized List<PartitionInfo> getPartitionInfo(AlluxioURI path)
+  public synchronized List<MuPartitionInfo> getPartitionInfo(AlluxioURI path)
       throws FileDoesNotExistException, AccessControlException, InvalidPathException {
     long fileId = getFileId(path);
-    List<PartitionInfo> partitions = mKVStoreToPartitions.get(fileId);
+    List<MuPartitionInfo> partitions = mKVStoreToPartitions.get(fileId);
     return partitions;
   }
 }

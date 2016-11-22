@@ -18,7 +18,7 @@ import alluxio.exception.AlluxioException;
 import alluxio.thrift.AlluxioService;
 import alluxio.thrift.AlluxioTException;
 import alluxio.thrift.MuKeyValueMasterClientService;
-import alluxio.thrift.PartitionInfo;
+import alluxio.thrift.MuPartitionInfo;
 
 import org.apache.thrift.TException;
 
@@ -91,11 +91,11 @@ public final class MuKeyValueMasterClient extends AbstractMasterClient {
    * @throws AlluxioException if an Alluxio error occurs
    * @throws IOException if an I/O error occurs
    */
-  public synchronized List<PartitionInfo> getPartitionInfo(final AlluxioURI path)
+  public synchronized List<MuPartitionInfo> getPartitionInfo(final AlluxioURI path)
       throws IOException, AlluxioException {
-    return retryRPC(new RpcCallableThrowsAlluxioTException<List<PartitionInfo>>() {
+    return retryRPC(new RpcCallableThrowsAlluxioTException<List<MuPartitionInfo>>() {
       @Override
-      public List<PartitionInfo> call() throws AlluxioTException, TException {
+      public List<MuPartitionInfo> call() throws AlluxioTException, TException {
         return mClient.getPartitionInfo(path.getPath());
       }
     });

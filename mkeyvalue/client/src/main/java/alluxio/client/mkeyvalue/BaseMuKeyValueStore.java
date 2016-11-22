@@ -15,7 +15,7 @@ import alluxio.AlluxioURI;
 import alluxio.Constants;
 import alluxio.client.ClientContext;
 import alluxio.exception.AlluxioException;
-import alluxio.thrift.PartitionInfo;
+import alluxio.thrift.MuPartitionInfo;
 import alluxio.thrift.WorkerNetAddress;
 import alluxio.wire.ThriftUtils;
 
@@ -42,7 +42,7 @@ public class BaseMuKeyValueStore implements MuKeyValueStore {
   private final MuKeyValueMasterClient mMasterClient;
 
   /** A list of partitions of the store. */
-  private final List<PartitionInfo> mPartitions;
+  private final List<MuPartitionInfo> mPartitions;
 
   /**
    * Constructs a {@link BaseMuKeyValueStore} instance.
