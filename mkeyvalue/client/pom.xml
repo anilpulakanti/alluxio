@@ -27,4 +27,21 @@
     <findbugs.path>${project.parent.parent.basedir}/build/findbugs/</findbugs.path>
   </properties>
   
+  <dependencies>
+  	<dependency>
+  		<groupId>org.alluxio</groupId>
+  		<artifactId>alluxio-core-common</artifactId>
+  		<version>1.4.0-SNAPSHOT</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.alluxio</groupId>
+  		<artifactId>alluxio-mkeyvalue-common</artifactId>
+  		<version>1.4.0-SNAPSHOT</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.alluxio</groupId>
+  		<artifactId>alluxio-core-client</artifactId>
+  		<version>1.4.0-SNAPSHOT</version>
+  	</dependency>
+  </dependencies>
 </project>

@@ -97,12 +97,15 @@ public final class Constants {
   public static final long LINEAGE_MASTER_WORKER_SERVICE_VERSION = 1;
   public static final long KEY_VALUE_MASTER_CLIENT_SERVICE_VERSION = 1;
   public static final long KEY_VALUE_WORKER_SERVICE_VERSION = 1;
+  public static final long MU_KEY_VALUE_MASTER_CLIENT_SERVICE_VERSION = 1;
+  public static final long MU_KEY_VALUE_WORKER_SERVICE_VERSION = 1;
   public static final long UNKNOWN_SERVICE_VERSION = -1;
 
   public static final String BLOCK_MASTER_NAME = "BlockMaster";
   public static final String FILE_SYSTEM_MASTER_NAME = "FileSystemMaster";
   public static final String LINEAGE_MASTER_NAME = "LineageMaster";
   public static final String KEY_VALUE_MASTER_NAME = "KeyValueMaster";
+  public static final String MU_KEY_VALUE_MASTER_NAME = "MuKeyValueMaster";
 
   public static final String BLOCK_MASTER_CLIENT_SERVICE_NAME = "BlockMasterClient";
   public static final String BLOCK_MASTER_WORKER_SERVICE_NAME = "BlockMasterWorker";
@@ -114,6 +117,8 @@ public final class Constants {
   public static final String FILE_SYSTEM_WORKER_CLIENT_SERVICE_NAME = "FileSystemWorkerClient";
   public static final String KEY_VALUE_MASTER_CLIENT_SERVICE_NAME = "KeyValueMasterClient";
   public static final String KEY_VALUE_WORKER_CLIENT_SERVICE_NAME = "KeyValueWorkerClient";
+  public static final String MU_KEY_VALUE_MASTER_CLIENT_SERVICE_NAME = "MuKeyValueMasterClient";
+  public static final String MU_KEY_VALUE_WORKER_CLIENT_SERVICE_NAME = "MuKeyValueWorkerClient";
 
   public static final String REST_API_PREFIX = "/v1/api";
 
