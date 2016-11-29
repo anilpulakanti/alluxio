@@ -48,7 +48,7 @@ public class MuKeyValueStoreOperations implements Callable<Boolean> {
    * @throws Exception if the instance fails to be created
    */
   public MuKeyValueStoreOperations(AlluxioURI storeUri) throws Exception {
-    mStoreUri = storeUri;
+    mStoreUri = storeUri; 
   }
 
   @Override
@@ -60,9 +60,9 @@ public class MuKeyValueStoreOperations implements Callable<Boolean> {
     MuKeyValueSystem kvs = MuKeyValueSystem.Factory.create();
 
     MuKeyValueStore store = kvs.createStore(mStoreUri);
-    // putKeyValuePairs(store);
+    putKeyValuePairs(store);
 
-    // boolean pass = getKeyValuePairs(store);
+    boolean pass = getKeyValuePairs(store);
     return true;
   }
 

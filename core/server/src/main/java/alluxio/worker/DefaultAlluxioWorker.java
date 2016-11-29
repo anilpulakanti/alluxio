@@ -117,6 +117,7 @@ public final class DefaultAlluxioWorker implements AlluxioWorkerService {
       // NOTE: ClassLoader is explicitly specified so we don't need to set ContextClassLoader
       ServiceLoader<WorkerFactory> discoveredMasterFactories =
           ServiceLoader.load(WorkerFactory.class, WorkerFactory.class.getClassLoader());
+      System.out.println("Initialising worker class "+WorkerFactory.class+"class loader "+WorkerFactory.class.getClassLoader());
       for (WorkerFactory factory : discoveredMasterFactories) {
         Worker worker = factory.create(workers);
         if (worker != null) {

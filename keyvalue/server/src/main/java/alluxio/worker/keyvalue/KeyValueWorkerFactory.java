@@ -42,7 +42,7 @@ public final class KeyValueWorkerFactory implements WorkerFactory {
     if (!Configuration.getBoolean(PropertyKey.KEY_VALUE_ENABLED)) {
       return null;
     }
-    LOG.info("Creating {} ", KeyValueWorker.class.getName());
+    LOG.info("Creating worker {} ", KeyValueWorker.class.getName());
 
     for (Worker worker : workers) {
       if (worker instanceof BlockWorker) {

@@ -55,7 +55,7 @@ public final class KeyValueStoreOperations implements Callable<Boolean> {
 
   @Override
   public Boolean call() throws Exception {
-    Configuration.set(PropertyKey.KEY_VALUE_ENABLED, String.valueOf(true));
+    //Configuration.set(PropertyKey.KEY_VALUE_ENABLED, String.valueOf(true));
     Configuration
         .set(PropertyKey.KEY_VALUE_PARTITION_SIZE_BYTES_MAX, String.valueOf(mPartitionLength));
 
@@ -131,7 +131,7 @@ public final class KeyValueStoreOperations implements Callable<Boolean> {
           + KeyValueStoreOperations.class.getName() + " <key-value store URI>");
       System.exit(-1);
     }
-
+    Configuration.set(PropertyKey.KEY_VALUE_ENABLED, String.valueOf(true));
     if (!Configuration.getBoolean(PropertyKey.KEY_VALUE_ENABLED)) {
       System.out.println("Alluxio key value service is disabled. To run this test, please set "
           + PropertyKey.KEY_VALUE_ENABLED + " to be true and restart the cluster.");

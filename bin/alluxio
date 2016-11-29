@@ -258,8 +258,8 @@ function main {
     runJavaClass "$@"
   ;;
   "runKVTest")
-    CLASS="alluxio.examples.keyvalue.KeyValueStoreOperations"
-    PARAMETER="/default_tests_files/KeyValueStoreOperations"
+    CLASS="alluxio.examples.keyvalue.MuKeyValueStoreOperations"
+    PARAMETER="/my-KVStore37"
     ALLUXIO_SHELL_JAVA_OPTS+=" -Dalluxio.logger.type=Console"
     runJavaClass "$@"
   ;;

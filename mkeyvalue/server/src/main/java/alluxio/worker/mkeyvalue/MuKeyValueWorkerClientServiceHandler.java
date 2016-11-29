@@ -11,9 +11,14 @@ import java.nio.ByteBuffer;
 
 import org.apache.thrift.TException;
 
+import com.google.common.base.Preconditions;
+
+import alluxio.Constants;
 import alluxio.thrift.AlluxioTException;
 import alluxio.thrift.MuKeyValueWorkerClientService;
 import alluxio.thrift.ThriftIOException;
+import alluxio.worker.block.BlockWorker;
+
 import java.util.*;
 
 /**
@@ -22,27 +27,46 @@ import java.util.*;
  */
 public final class MuKeyValueWorkerClientServiceHandler implements MuKeyValueWorkerClientService.Iface  {
 
+	private final BlockWorker mBlockWorker;
+	/**
+	 * @param blockWorker the {@link BlockWorker}
+	 */
+	private Map<String,MuKVWorkerPartitionInfo> mPartitionMap = null; 
+	
+	public Map<String, MuKVWorkerPartitionInfo> getmPartitionMap() {
+		return mPartitionMap;
+	}
+	public void setmPartitionMap(Map<String, MuKVWorkerPartitionInfo> mPartitionMap) {
+		this.mPartitionMap = mPartitionMap;
+	}
+	
+	public MuKeyValueWorkerClientServiceHandler(BlockWorker blockWorker) {
+	   // mBlockWorker = Preconditions.checkNotNull(blockWorker);
+		mBlockWorker = null;
+		mPartitionMap = new HashMap<>();
+	  }
 	@Override
 	public long getServiceVersion() throws TException {
 		// TODO Auto-generated method stub
-		return 0;
+		return Constants.MU_KEY_VALUE_WORKER_SERVICE_VERSION;
 	}
 
 	//Contains the map from the path of the KV store to the Indirection Column
 	//and the current Merge Offset
-	private Map<String,MuKVWorkerPartitionInfo> mPartitionMap = new HashMap<>(); 
+	
 	TailPageFileOutputStream mBufferedWriter;
 																						
 	
 	@Override
 	public ByteBuffer get(String path, ByteBuffer key) throws AlluxioTException, ThriftIOException, TException {
-		System.out.println("In get function");
+		System.out.println("In get function: Path is "+path);
 		if(isPathValid(path)) {
 		 
 			if(!mPartitionMap.containsKey(path) || !mPartitionMap.get(path).getmIndirectionColumn().containsKey(key)) {
 				System.out.println("Error reading the value");
 				return null;
 			}
+			//Check for the case where value is -1;
 			return mPartitionMap.get(path).getmIndirectionColumn().get(key);
 		}
 		return null;
@@ -52,16 +76,16 @@ public final class MuKeyValueWorkerClientServiceHandler implements MuKeyValueWor
 	public void put(String path, ByteBuffer key, ByteBuffer value)
 			throws AlluxioTException, ThriftIOException, TException {
 		if(isPathValid(path)) {
+			createOrReturnIndirectionColumn(path).put(key, value);
 			//try {
-				//mBufferedWriter.write(key.array(), value.array());
-			    //mPartitionMap.get(path).getmIndirectionColumn().put(key, value);
-				//mPartitionMap.get(path).setMmergeOffset(mPartitionMap.get(path).getMmergeOffset()+ key.array().length + value.array().length);
+			    //mPartitionMap.get(path).getMbWriter().write(key.array(), value.array());
+				//mergeOffset += key.array().length  + value.array().length;
+				mPartitionMap.get(path).setMmergeOffset(mPartitionMap.get(path).getMmergeOffset()+ key.array().length + value.array().length);
+				System.out.println("mergeOffset: "+mPartitionMap.get(path).getMmergeOffset());
 			//} catch (IOException e) {
 				// TODO Auto-generated catch block
-			//	e.printStackTrace();
-			//}
-			Map<ByteBuffer,ByteBuffer> IC = createOrReturnIndirectionColumn(path);
-			IC.put(key, value);
+				//e.printStackTrace();
+			//}	
 		}
 		
 	}
@@ -78,8 +102,10 @@ public final class MuKeyValueWorkerClientServiceHandler implements MuKeyValueWor
 		//If indirection Column exists for the given path. Then return it.
 		//Else create a new indirection Column and tail page file. Add those entries and return the indirection column.
 		try {
-			if(!mPartitionMap.containsKey(path))  //Initializing the Key-value Store Variables
+			if(!mPartitionMap.containsKey(path)) {  //Initializing the Key-value Store Variables
 				initializeKVStore(path);
+				System.out.println("Initializing KV Store");
+			}
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -90,8 +116,7 @@ public final class MuKeyValueWorkerClientServiceHandler implements MuKeyValueWor
 	}
 	
 	private void initializeKVStore(String path) throws FileNotFoundException {
-		//mBufferedWriter = new TailPageFileOutputStream(path);
-	    mPartitionMap.put(path,new MuKVWorkerPartitionInfo());
+	    mPartitionMap.put(path,new MuKVWorkerPartitionInfo(path));
 	}
 
 	@Override

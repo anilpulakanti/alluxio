@@ -14,12 +14,21 @@
  */
 package alluxio.worker.mkeyvalue;
 
+import alluxio.Constants;
+import alluxio.thrift.MuKeyValueWorkerClientService;
+import alluxio.util.ThreadFactoryUtils;
 import alluxio.worker.AbstractWorker;
+import alluxio.worker.block.BlockWorker;
+
 
 import org.apache.thrift.TProcessor;
 
+import com.google.common.base.Preconditions;
+
+import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
+//import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * @author anil
@@ -27,15 +36,33 @@ import java.util.concurrent.ExecutorService;
  */
 public final class MuKeyValueWorker extends AbstractWorker {
 
-  protected MuKeyValueWorker(ExecutorService executorService) {
+  private final BlockWorker mBlockWorker;
+	  /** Logic for handling key-value RPC requests. */
+  private final MuKeyValueWorkerClientServiceHandler mMuKeyValueServiceHandler;	
+	
+	
+  /*protected MuKeyValueWorker(ExecutorService executorService) {
     super(executorService);
     // TODO Auto-generated constructor stub
-  }
+  }*/
 
+  public MuKeyValueWorker(BlockWorker blockWorker) {
+	    // TODO(binfan): figure out do we really need thread pool for key-value worker (and for what)
+	    super(Executors.newFixedThreadPool(1,
+	        ThreadFactoryUtils.build("keyvalue-worker-heartbeat-%d", true)));
+	    mBlockWorker = Preconditions.checkNotNull(blockWorker);
+	    mMuKeyValueServiceHandler = new MuKeyValueWorkerClientServiceHandler(blockWorker);
+	  //  Merge mmergeProcess = new Merge(mMuKeyValueServiceHandler.getmPartitionMap());
+	   // mmergeProcess.run();
+	  }
+  
+  
   @Override
   public Map<String, TProcessor> getServices() {
-    // TODO Auto-generated method stub
-    return null;
+	    Map<String, TProcessor> services = new HashMap<>();
+	    services.put(Constants.MU_KEY_VALUE_WORKER_CLIENT_SERVICE_NAME,
+	        new MuKeyValueWorkerClientService.Processor<>(mMuKeyValueServiceHandler));
+	    return services;
   }
 
   @Override
