@@ -56,11 +56,13 @@ public class MuKVWorkerPartitionInfo {
 		mIndirectionColumn = new HashMap<>();
 		mmergeOffset = 0;
 		mprevmergeOffset = 0;
+		tmap = new TreeMap<>();
 		try {
 			//File yourFile = new File("~/"+path);
 			//yourFile.createNewFile();
 			System.out.println("Created new file "+path);
-			mbWriter = new TailPageFileOutputStream("~/"+path);
+			//mbWriter = new TailPageFileOutputStream("/home/viswanath/Desktop/"+path);
+			mbWriter = new TailPageFileOutputStream("/home/viswanath/Desktop/Dummy.txt");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

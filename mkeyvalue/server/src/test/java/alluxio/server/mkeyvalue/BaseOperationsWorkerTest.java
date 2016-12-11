@@ -3,6 +3,7 @@ package alluxio.server.mkeyvalue;
 import alluxio.thrift.AlluxioTException;
 import alluxio.thrift.ThriftIOException;
 import alluxio.worker.block.BlockWorker;
+import alluxio.worker.mkeyvalue.Merge;
 import alluxio.worker.mkeyvalue.MuKeyValueWorkerClientServiceHandler;
 
 import java.nio.ByteBuffer;
@@ -19,11 +20,14 @@ public class BaseOperationsWorkerTest {
 		
 		System.out.println("Starting the testing for workers");
 		
-		String path = "/Dummy";
+		String path = "/Dummy.txt";
 		
 		BlockWorker bw = null;
 		
 		MuKeyValueWorkerClientServiceHandler handler = new MuKeyValueWorkerClientServiceHandler(bw);
+		//Merge mmergeProcess = new Merge(handler.getmPartitionMap());
+		//Thread t = new Thread(mmergeProcess);
+		System.out.println("Came back from the thread");
 		byte[] key = null, value = null;
         try {
         key = ByteBuffer.allocate(4).putInt(1).array();
@@ -48,6 +52,22 @@ public class BaseOperationsWorkerTest {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (TException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        Merge mmergeProcess = new Merge(handler.getmPartitionMap());
+		Thread t = new Thread(mmergeProcess);
+        t.start();
+        try {
+			Thread.sleep(4000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        mmergeProcess.terminate();
+        try {
+			t.join();
+		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

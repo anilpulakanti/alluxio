@@ -38,7 +38,7 @@ public class MuKeyValueStoreOperations implements Callable<Boolean> {
   private static final Logger LOG = LoggerFactory.getLogger(Constants.LOGGER_TYPE);
 
   private final int mPartitionLength = Constants.MB;
-  private final int mNumKeyValuePairs = 10;
+  private final int mNumKeyValuePairs = 1000;
 
   private AlluxioURI mStoreUri;
   private Map<ByteBuffer, ByteBuffer> mKeyValuePairs = new HashMap<>();
@@ -73,8 +73,8 @@ public class MuKeyValueStoreOperations implements Callable<Boolean> {
       // Keys are 0, 1, 2, etc.
       byte[] key = ByteBuffer.allocate(4).putInt(i).array();
       // Values are byte arrays of length {@link #mValueLength}.
-      int valueLength = mPartitionLength / 2;
-      byte[] value = BufferUtils.getIncreasingByteArray(valueLength);
+      //int valueLength = mPartitionLength / 2;
+      byte[] value = BufferUtils.getIncreasingByteArray(4);
       writer.put(ByteBuffer.wrap(key), ByteBuffer.wrap(value));
       mKeyValuePairs.put(ByteBuffer.wrap(key), ByteBuffer.wrap(value));
     }

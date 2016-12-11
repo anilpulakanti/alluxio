@@ -259,7 +259,7 @@ function main {
   ;;
   "runKVTest")
     CLASS="alluxio.examples.keyvalue.MuKeyValueStoreOperations"
-    PARAMETER="/my-KVStore37"
+    PARAMETER="/mu-KVStore9"
     ALLUXIO_SHELL_JAVA_OPTS+=" -Dalluxio.logger.type=Console"
     runJavaClass "$@"
   ;;

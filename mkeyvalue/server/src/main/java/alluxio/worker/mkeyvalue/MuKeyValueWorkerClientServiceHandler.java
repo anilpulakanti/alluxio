@@ -77,15 +77,16 @@ public final class MuKeyValueWorkerClientServiceHandler implements MuKeyValueWor
 			throws AlluxioTException, ThriftIOException, TException {
 		if(isPathValid(path)) {
 			createOrReturnIndirectionColumn(path).put(key, value);
-			//try {
-			    //mPartitionMap.get(path).getMbWriter().write(key.array(), value.array());
-				//mergeOffset += key.array().length  + value.array().length;
-				mPartitionMap.get(path).setMmergeOffset(mPartitionMap.get(path).getMmergeOffset()+ key.array().length + value.array().length);
+			try {
+			    mPartitionMap.get(path).getMbWriter().write(key.array(), value.array());
+			    mPartitionMap.get(path).getMbWriter().flush();
+				long mergeOffset =  mPartitionMap.get(path).getMmergeOffset() + key.array().length  + value.array().length;
+				mPartitionMap.get(path).setMmergeOffset(mergeOffset);
 				System.out.println("mergeOffset: "+mPartitionMap.get(path).getMmergeOffset());
-			//} catch (IOException e) {
+			} catch (IOException e) {
 				// TODO Auto-generated catch block
-				//e.printStackTrace();
-			//}	
+				e.printStackTrace();
+			}	
 		}
 		
 	}

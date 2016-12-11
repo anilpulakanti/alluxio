@@ -52,8 +52,10 @@ public final class MuKeyValueWorker extends AbstractWorker {
 	        ThreadFactoryUtils.build("keyvalue-worker-heartbeat-%d", true)));
 	    mBlockWorker = Preconditions.checkNotNull(blockWorker);
 	    mMuKeyValueServiceHandler = new MuKeyValueWorkerClientServiceHandler(blockWorker);
-	  //  Merge mmergeProcess = new Merge(mMuKeyValueServiceHandler.getmPartitionMap());
-	   // mmergeProcess.run();
+	    Merge mmergeProcess = new Merge(mMuKeyValueServiceHandler.getmPartitionMap());
+	   //mmergeProcess.run();
+	    Thread t = new Thread(mmergeProcess);
+        t.start();
 	  }
   
   
